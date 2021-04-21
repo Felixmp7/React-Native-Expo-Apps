@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;

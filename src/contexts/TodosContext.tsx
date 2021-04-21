@@ -1,5 +1,5 @@
 import * as React from 'react';
-import todos from './todos.json';
+import todos from '../todos.json';
 
 export const TodosContext = React.createContext<ContextProps | undefined>(undefined);
 
