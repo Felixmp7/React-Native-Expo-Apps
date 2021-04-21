@@ -1,22 +1,37 @@
-/**
- * Learn more about using TypeScript with React Navigation:
- * https://reactnavigation.org/docs/typescript/
- */
-
-export type RootStackParamList = {
+type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
 };
 
-export type BottomTabParamList = {
+type BottomTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
 };
 
-export type TabOneParamList = {
+type TabOneParamList = {
   TabOneScreen: undefined;
 };
 
-export type TabTwoParamList = {
+type TabTwoParamList = {
   TabTwoScreen: undefined;
+};
+
+type Todos = {
+  id: string;
+  task: string;
+  description: string;
+  done: boolean;
+};
+type Action = {
+  type: string;
+  payload: Todos;
+};
+
+type Dispatch = (action: Action) => void;
+type State = { todos: Array<Todos> };
+type ChildrenNode = { children: React.ReactNode };
+
+type ContextProps = {
+  state: State;
+  dispatch: Dispatch
 };
