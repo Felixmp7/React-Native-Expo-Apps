@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import {
     Text, View, TextInput, TouchableOpacity,
 } from 'react-native';
@@ -6,12 +6,22 @@ import uuid from 'react-native-uuid';
 import tw from 'tailwind-rn';
 import useTodos from '../../hooks/useTodos';
 
-const CreateTodo = ({ navigation }: any): JSX.Element => {
+const TodoDetails = ({ navigation, route }: any): JSX.Element => {
     const { dispatch } = useTodos();
-    const [task, setTask] = React.useState('');
-    const [description, setDescription] = React.useState('');
+    const { params } = route;
+    const taskTitle = params?.isNewTodo? '' : params.task || '';
+    const taskDescription = params?.isNewTodo? '' : params.description || '';
+    const textButton = params?.isNewTodo? 'Add Todo' : 'Edit Todo' || 'Add Todo';
 
-    const handleCreateTodo = (): void => {
+    const [task, setTask] = useState(taskTitle);
+    const [description, setDescription] = useState(taskDescription);
+
+    const handleTodo = (): void => {
+        if (params.isNewTodo) handleAddTodo();
+        else handleEditTodo();
+    };
+
+    const handleAddTodo = (): void => {
         const data = {
             type: 'ADD_TODO',
             payload: {
@@ -19,6 +29,20 @@ const CreateTodo = ({ navigation }: any): JSX.Element => {
                 task,
                 description,
                 done: false,
+            },
+        };
+        dispatch(data);
+        navigation.goBack();
+    };
+
+    const handleEditTodo = (): void => {
+        const data = {
+            type: 'UPDATE_TODO',
+            payload: {
+                id: params.id,
+                task,
+                description,
+                done: params.done,
             },
         };
         dispatch(data);
@@ -44,6 +68,7 @@ const CreateTodo = ({ navigation }: any): JSX.Element => {
                     style={tw('pb-1 border-b border-gray-500')}
                     onChangeText={(text) => setDescription(text)}
                     value={description}
+                    multiline
                     placeholder="description"
                     keyboardType="default"
                 />
@@ -51,13 +76,13 @@ const CreateTodo = ({ navigation }: any): JSX.Element => {
             <View style={tw('justify-center items-center my-6')}>
                 <TouchableOpacity
                     style={tw('border-2 border-green-600 rounded p-2 justify-center items-center')}
-                    onPress={handleCreateTodo}
+                    onPress={handleTodo}
                 >
-                    <Text style={tw('text-green-600 font-semibold')}>Create Todo</Text>
+                    <Text style={tw('text-green-600 font-semibold')}>{textButton}</Text>
                 </TouchableOpacity>
             </View>
         </View>
     );
 };
 
-export default CreateTodo;
+export default TodoDetails;
