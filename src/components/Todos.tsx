@@ -1,18 +1,36 @@
-import * as React from 'react';
-import { Text, View, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Pressable, Alert } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import tw from 'tailwind-rn';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTodos from '../hooks/useTodos';
+import { useNavigation } from '@react-navigation/native';
 
 const Todo = ({
   id, task, description, done,
 }: Todos): JSX.Element => {
-  const [isOpen, setIsOpen] = React.useState(false);
   const { dispatch } = useTodos();
-
+  const navigation = useNavigation();
+  const [isOpen, setIsOpen] = useState(false);
   const statusColor: string = done ? 'bg-green-500' : 'bg-red-500';
   const borderColor: string = done ? 'border-green-500' : 'border-red-500';
+
+  const handleEditTask = () =>
+    Alert.alert(
+      "Edit task",
+      "¿Do you want to edit this task?",
+      [
+        {
+          text: "Yes",
+          onPress: () => navigation.navigate('Todo', { id, task, description, done }),
+        },
+        {
+          text: "No",
+          onPress: () => Alert.alert('Info', 'If do you want to delete any task, swipe to right any task'),
+        },
+      ],
+      { cancelable: true }
+    );
 
   const handleUpdateTodo = (): void => {
     const data = {
@@ -47,6 +65,7 @@ const Todo = ({
       <Swipeable renderRightActions={DeleteTodo}>
         <Pressable
           onPress={() => setIsOpen(!isOpen)}
+          onLongPress={handleEditTask}
         >
           <View style={tw('w-full flex-row justify-between items-center')}>
             <Text numberOfLines={2} style={[tw('mr-3'), { flex: 1 }]}>
