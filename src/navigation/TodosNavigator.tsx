@@ -2,20 +2,20 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import TodosList from '../screens/todos/TodosList';
 import TodosProvider from '../contexts/TodosContext';
-import CreateTodo from '../screens/todos/CreateTodo';
+import TodoDetails from '../screens/todos/TodoDetails';
 
 const Todos = createStackNavigator();
 
 const TodosNavigator = () => (
     <TodosProvider>
-        <Todos.Navigator initialRouteName="TodosList" screenOptions={{ headerShown: false }}>
+        <Todos.Navigator initialRouteName="TodosList">
             <Todos.Screen
                 name="TodosList"
                 component={TodosList}
             />
             <Todos.Screen
-                name="CreateTodo"
-                component={CreateTodo}
+                name="Todo"
+                component={TodoDetails}
             />
         </Todos.Navigator>
     </TodosProvider>
