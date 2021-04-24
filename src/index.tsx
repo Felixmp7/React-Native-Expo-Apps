@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }: any) => (
         <Text style={tw('text-lg text-center text-green-500')}>Todos</Text>
       </Pressable>
       <View style={tw('flex-row')}>
-        <Pressable style={tw('mr-8')}>
+        <Pressable onPress={() => navigation.navigate('Chat')} style={tw('mr-8')}>
           <View style={tw('bg-indigo-100 p-5 rounded-full')}>
             <Ionicons style={tw('text-indigo-400')} name="chatbubbles-sharp" size={40} />
           </View>
