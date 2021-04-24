@@ -1,6 +1,6 @@
 import * as React from 'react';
-import useTodoReducer from '../services/useTodoReducer';
-import todos from '../todos.json';
+import useTodoReducer from './reducers/useTodoReducer';
+import todos from './todos.json';
 
 export const TodosContext = React.createContext<ContextProps | undefined>(undefined);
 

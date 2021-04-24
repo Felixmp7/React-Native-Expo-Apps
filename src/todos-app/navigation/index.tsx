@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import TodosList from '../screens/todos/TodosList';
-import TodosProvider from '../contexts/TodosContext';
-import TodoDetails from '../screens/todos/TodoDetails';
+import TodosList from '../screens/TodosList';
+import TodosProvider from '../TodosContext';
+import TodoDetails from '../screens/TodoDetails';
 
 const Todos = createStackNavigator();
 

@@ -4,8 +4,8 @@ import {
 import * as React from 'react';
 import tw from 'tailwind-rn';
 import { AntDesign } from '@expo/vector-icons';
-import useTodos from '../../hooks/useTodos';
-import Todo from '../../components/Todos';
+import useTodos from '../hooks/useTodos';
+import Todo from '../components/Todos';
 
 const TodosList = ({ navigation }: any): JSX.Element => {
   const { state: { todos } } = useTodos();

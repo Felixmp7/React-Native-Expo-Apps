@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TodosContext } from '../contexts/TodosContext';
+import { TodosContext } from '../TodosContext';
 
 const useTodos = (): ContextProps => {
   const context = React.useContext(TodosContext);

@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import uuid from 'react-native-uuid';
 import tw from 'tailwind-rn';
-import useTodos from '../../hooks/useTodos';
+import useTodos from '../hooks/useTodos';
 
 const TodoDetails = ({ navigation, route }: any): JSX.Element => {
     const { dispatch } = useTodos();
