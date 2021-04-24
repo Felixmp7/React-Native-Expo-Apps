@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Text, View, Pressable, Alert } from 'react-native';
+import {
+  Text, View, Pressable, Alert,
+} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import tw from 'tailwind-rn';
 import { FontAwesome5 } from '@expo/vector-icons';
-import useTodos from '../hooks/useTodos';
 import { useNavigation } from '@react-navigation/native';
+import useTodos from '../hooks/useTodos';
 
 const Todo = ({
   id, task, description, done,
@@ -15,22 +17,23 @@ const Todo = ({
   const statusColor: string = done ? 'bg-green-500' : 'bg-red-500';
   const borderColor: string = done ? 'border-green-500' : 'border-red-500';
 
-  const handleEditTask = () =>
-    Alert.alert(
-      "Edit task",
-      "¿Do you want to edit this task?",
-      [
-        {
-          text: "Yes",
-          onPress: () => navigation.navigate('Todo', { id, task, description, done }),
-        },
-        {
-          text: "No",
-          onPress: () => Alert.alert('Info', 'If do you want to delete any task, swipe to right any task'),
-        },
-      ],
-      { cancelable: true }
-    );
+  const handleEditTask = () => Alert.alert(
+    'Edit task',
+    '¿Do you want to edit this task?',
+    [
+      {
+        text: 'Yes',
+        onPress: () => navigation.navigate('Todo', {
+          id, task, description, done,
+        }),
+      },
+      {
+        text: 'No',
+        onPress: () => Alert.alert('Info', 'If do you want to delete any task, swipe to right any task'),
+      },
+    ],
+    { cancelable: true },
+  );
 
   const handleUpdateTodo = (): void => {
     const data = {
@@ -79,10 +82,10 @@ const Todo = ({
             </Pressable>
           </View>
           {isOpen && (
-            <Text style={tw('mt-4 py-2')}>
-              <Text style={tw('font-bold')}>description:</Text>
-              {` ${description}`}
-            </Text>
+          <Text style={tw('mt-4 py-2')}>
+            <Text style={tw('font-bold')}>description:</Text>
+            {` ${description}`}
+          </Text>
           )}
         </Pressable>
       </Swipeable>

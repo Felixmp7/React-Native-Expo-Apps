@@ -1,4 +1,6 @@
-import { Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';

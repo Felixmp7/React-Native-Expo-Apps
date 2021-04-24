@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }:any): JSX.Element => {
         label="Email"
         leftIcon={
           <MaterialIcons name="email" size={24} color="black" />
-        }
+				}
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }:any): JSX.Element => {
         label="Password"
         leftIcon={
           <MaterialIcons name="lock-outline" size={24} color="black" />
-        }
+				}
         value={password}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry
