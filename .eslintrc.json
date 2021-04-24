@@ -55,13 +55,7 @@
         "HeaderHeight": false
     },
     "rules": {
-        "indent": [
-            2,
-            4,
-            {
-                "indentSwitchCase": true
-            }
-        ],
+        "indent": ["error"],
         "import/extensions": [
             "error",
             "ignorePackages",
