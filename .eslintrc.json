@@ -55,7 +55,6 @@
         "HeaderHeight": false
     },
     "rules": {
-        "indent": ["error"],
         "import/extensions": [
             "error",
             "ignorePackages",
