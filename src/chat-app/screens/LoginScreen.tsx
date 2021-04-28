@@ -13,8 +13,7 @@ const LoginScreen = ({ navigation }:any): JSX.Element => {
     auth.signInWithEmailAndPassword(email, password)
       .then(() => {
         Alert.alert('Notification', 'Login successfully');
-        navigation.popToTop();
-        // ...
+        navigation.replace('ChatRoom');
       })
       .catch((error: any) => {
         Alert.alert('Notification', error.message);
@@ -24,10 +23,7 @@ const LoginScreen = ({ navigation }:any): JSX.Element => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user: any) => {
       if (user) {
-        navigation.replace('Chat');
-      } else {
-        navigation.canGoBack() && navigation.popToTop();
-        // No user is signed in.
+        navigation.replace('ChatRoom');
       }
       return unsubscribe;
     });

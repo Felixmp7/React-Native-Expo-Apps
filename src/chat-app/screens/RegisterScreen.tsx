@@ -20,7 +20,7 @@ const RegisterScreen = ({ navigation }: any): JSX.Element => {
         }).then(() => {
           Alert.alert('Notification', `User ${name} was created successfully`, [{
             text: 'OK',
-            onPress: () => navigation.replace('Chat'),
+            onPress: () => navigation.replace('ChatRoom'),
           }]);
         }).catch((error: any) => {
           Alert.alert('Notification', error.message);
