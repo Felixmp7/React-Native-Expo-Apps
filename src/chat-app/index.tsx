@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ChatScreen from './screens/ChatScreen';
 
 const Chat = createStackNavigator();
 
@@ -16,6 +17,11 @@ const ChatNavigator = () => (
       name="RegisterScreen"
       options={{ title: 'Register' }}
       component={RegisterScreen}
+    />
+    <Chat.Screen
+      name="Chat"
+      options={{ title: 'Register' }}
+      component={ChatScreen}
     />
   </Chat.Navigator>
 );
