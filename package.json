@@ -8,8 +8,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "lint": "eslint . --ext .ts",
-    "lint-fix": "eslint . --ext .ts --ext .tsx --fix"
+    "lint": "eslint --ext .tsx --ext .ts src/",
+    "lint-fix": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
   "jest": {
     "preset": "jest-expo"

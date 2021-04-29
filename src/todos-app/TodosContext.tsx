@@ -5,13 +5,13 @@ import todos from './todos.json';
 export const TodosContext = React.createContext<ContextProps | undefined>(undefined);
 
 const TodosProvider = ({ children }: ChildrenNode): JSX.Element => {
-  const [state, dispatch] = React.useReducer(useTodoReducer, { todos });
+    const [state, dispatch] = React.useReducer(useTodoReducer, { todos });
 
-  return (
-    <TodosContext.Provider value={{ state, dispatch }}>
-      {children}
-    </TodosContext.Provider>
-  );
+    return (
+        <TodosContext.Provider value={{ state, dispatch }}>
+            {children}
+        </TodosContext.Provider>
+    );
 };
 
 export default TodosProvider;
