@@ -1,76 +1,45 @@
 {
-    "root": true,
-    "extends": [
-        "airbnb",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
     "env": {
-        "es6": true,
         "node": true,
-        "jest": true,
-        "react-native/react-native": true
+        "es2021": true,
+        "jest": true
     },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
-            "jsx": true,
-            "impliedStrict": true
+            "jsx": true
         },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
+        "ecmaVersion": 12,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
     },
     "plugins": [
         "react",
-        "react-native",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "react-hooks"
     ],
-    "settings": {
-        "import/resolver": {
-            "typescript": {},
-            "babel-plugin-root-import": {
-                "rootPathSuffix": "app",
-                "rootPathPrefix": "~"
-            },
-            "node": {
-                "extensions": [
-                    ".js",
-                    ".jsx",
-                    ".ts",
-                    ".tsx"
-                ]
-            }
-        }
-    },
-    "globals": {
-        "ios": false,
-        "android": false,
-        "windowHeight": false,
-        "windowWidth": false,
-        "hairlineWidth": false,
-        "DeviceInfo": false,
-        "isIphoneX": false,
-        "StatusBarHeight": false,
-        "HeaderHeight": false
-    },
     "rules": {
-        "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-                "js": "never",
-                "jsx": "never",
-                "ts": "never",
-                "tsx": "never"
-            }
-        ],
-        "global-require": 0,
+        "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": [
-            2,
+            "error",
             "unix"
         ],
-        "prefer-const": 0,
+        "quotes": [
+            "error",
+            "single",
+            { "avoidEscape": true }
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
         "no-console": [
             "warn",
             {
@@ -147,7 +116,11 @@
                 "allowTypedFunctionExpressions": true
             }
         ],
-        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-use-before-define": [
             2,
@@ -166,5 +139,10 @@
         "@typescript-eslint/no-non-null-assertion": 0,
         "@typescript-eslint/camelcase": 0,
         "@typescript-eslint/ban-ts-ignore": 0
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }
