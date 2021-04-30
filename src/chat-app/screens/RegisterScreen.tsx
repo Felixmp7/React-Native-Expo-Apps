@@ -3,33 +3,21 @@ import { Alert, View } from 'react-native';
 import tw from 'tailwind-rn';
 import { Input, Button } from 'react-native-elements';
 import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { auth } from '../services/firebase';
-import defaultImage from 'constants/ProfileImages';
+import { registerNewUser } from '../services/api';
 
-const RegisterScreen = ({ navigation }: any): JSX.Element => {
+const RegisterScreen = (): JSX.Element => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [imageURL, setImageURL] = useState('');
 
-    const handleRegister = () => {
-        auth.createUserWithEmailAndPassword(email, password)
-            .then(({ user }: any) => {
-                user.updateProfile({
-                    displayName: name,
-                    photoURL: imageURL || defaultImage,
-                }).then(() => {
-                    Alert.alert('Notification', `User ${name} was created successfully`, [{
-                        text: 'OK',
-                        onPress: () => navigation.replace('ChatRoom'),
-                    }]);
-                }).catch((error: { message: string | undefined; }) => {
-                    Alert.alert('Notification', error.message);
-                });
-            })
-            .catch((error: { message: string | undefined; }) => {
-                Alert.alert('Notification', error.message);
-            });
+    const handleRegister = async () => {
+        const response = await registerNewUser({ email, password, imageURL, name });
+        if (response.status === 'SUCCESS') {
+            Alert.alert('Notification', `User ${name} was created successfully`);
+        } else {
+            Alert.alert('Notification', response.error.message);
+        }
     };
 
     return (
