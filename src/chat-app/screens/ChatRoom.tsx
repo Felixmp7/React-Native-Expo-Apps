@@ -5,9 +5,8 @@ import { Avatar } from 'react-native-elements';
 import tw from 'tailwind-rn';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { auth, db } from '../services/firebase';
-import defaultImage from '../../constants/ProfileImages';
 
-const ChatScreen = ({ navigation }: any): JSX.Element => {
+const ChatRoom = ({ navigation }: any): JSX.Element => {
     const [messages, setMessages] = useState<Array<any>>([]);
 
     const onSend = useCallback((messagesList: Array<any> = []) => {
@@ -22,7 +21,7 @@ const ChatScreen = ({ navigation }: any): JSX.Element => {
         <View style={tw('pl-3')}>
             <Avatar
                 rounded
-                source={{ uri: auth?.currentUser?.photoURL || defaultImage }}
+                source={{ uri: auth?.currentUser?.photoURL }}
             />
         </View>
     );
@@ -70,4 +69,4 @@ const ChatScreen = ({ navigation }: any): JSX.Element => {
     );
 };
 
-export default ChatScreen;
+export default ChatRoom;

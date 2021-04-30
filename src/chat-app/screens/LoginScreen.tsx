@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }: any): JSX.Element => {
     const handleLogin = async () => {
         const response = await login(email, password);
         if (response.status === 'SUCCESS') {
-            navigation.replace('ChatRoom');
+            navigation.replace('ChatListScreen');
         } else {
             Alert.alert('Notification', response.error.message);
         }
@@ -22,7 +22,7 @@ const LoginScreen = ({ navigation }: any): JSX.Element => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user: any) => {
             if (user) {
-                navigation.replace('ChatRoom');
+                navigation.replace('ChatListScreen');
             }
         });
         return () => unsubscribe();
