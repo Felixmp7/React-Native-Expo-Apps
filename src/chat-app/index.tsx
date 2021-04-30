@@ -20,7 +20,6 @@ const ChatNavigator = () => (
         />
         <Chat.Screen
             name="ChatRoom"
-            options={{ title: 'Register' }}
             component={ChatScreen}
         />
     </Chat.Navigator>
