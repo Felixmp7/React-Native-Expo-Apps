@@ -1,37 +1,42 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Pressable } from 'react-native';
+import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
+import { View, Pressable, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
 import tw from 'tailwind-rn';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { auth, db } from '../services/firebase';
-import defaultImage from 'constants/ProfileImages';
-
-const AvatarImage = (): JSX.Element => (
-    <View style={tw('pl-3')}>
-        <Avatar
-            rounded
-            source={{ uri: auth?.currentUser?.photoURL || defaultImage }}
-        />
-    </View>
-);
-const SignOutButton = (navigation: any): JSX.Element => {
-    const signOut = auth.signOut().then(() => navigation.replace('LoginScreen'))
-        .catch((error: any) => console.log(error.message));
-    return (
-        <Pressable onPress={signOut} style={tw('pr-3')}>
-            <FontAwesome name="sign-out" size={24} color="black" />
-        </Pressable>
-    );
-};
+import defaultImage from '../../constants/ProfileImages';
 
 const ChatScreen = ({ navigation }: any): JSX.Element => {
     const [messages, setMessages] = useState<Array<any>>([]);
 
-    useEffect(() => {
+    const onSend = useCallback((messagesList: Array<any> = []) => {
+        const newMessage = { ...messagesList[0] };
+        db.collection('chats').add(newMessage);
+    }, []);
+
+    const signOut = () => auth.signOut().then(() => navigation.replace('LoginScreen'))
+        .catch((error: any) => Alert.alert(error.message));
+
+    const UserAvatar = (
+        <View style={tw('pl-3')}>
+            <Avatar
+                rounded
+                source={{ uri: auth?.currentUser?.photoURL || defaultImage }}
+            />
+        </View>
+    );
+
+    const SignOutButton = (
+        <Pressable onPress={signOut} style={tw('pr-3')}>
+            <FontAwesome name="sign-out" size={24} color="black" />
+        </Pressable>
+    );
+
+    useLayoutEffect(() => {
         navigation.setOptions({
-            headerLeft: AvatarImage,
-            headerRight: SignOutButton(navigation)
+            headerLeft: () => UserAvatar,
+            headerRight: () => SignOutButton
         });
     }, []);
 
@@ -49,11 +54,6 @@ const ChatScreen = ({ navigation }: any): JSX.Element => {
             });
 
         return chats;
-    }, []);
-
-    const onSend = useCallback((messagesList: Array<any> = []) => {
-        const newMessage = { ...messagesList[0] };
-        db.collection('chats').add(newMessage);
     }, []);
 
     return (
