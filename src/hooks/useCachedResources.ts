@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import {
-    Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons,
+    Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons, Entypo
 } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,6 +21,7 @@ export default function useCachedResources() {
                     ...FontAwesome5.font,
                     ...AntDesign.font,
                     ...MaterialCommunityIcons.font,
+                    ...Entypo.font,
                     'space-mono': require('../../assets/fonts/SpaceMono-Regular.ttf'),
                 });
             } catch (e) {
