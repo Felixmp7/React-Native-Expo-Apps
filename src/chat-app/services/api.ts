@@ -6,6 +6,7 @@ interface RegisterProps {
     password?: string;
     imageURL: string;
     name: string;
+    user?: any
 }
 
 interface UpdateProps {
@@ -38,9 +39,9 @@ export const login = async (email: string, password: string): Promise<ApiRespons
     }
 };
 
-const registerUserInFirestore = async ({ email, name, imageURL }: RegisterProps): Promise<ApiResponseProps> => {
+const registerUserInFirestore = async ({ email, name, imageURL, user }: RegisterProps): Promise<ApiResponseProps> => {
     try {
-        const response = await db.collection('users').add({ name, email, imageURL });
+        const response = await db.collection('users').add({ name, email, imageURL, _id: user.uid });
         if(response.id) {
             return {
                 status: 'SUCCESS',
@@ -86,7 +87,7 @@ export const registerNewUser = async ({ email, password, imageURL, name }: Regis
             const updateResponse = await updateProfile({ imageURL, name, user: response.user });
             if (updateResponse.status === 'SUCCESS') {
                 const firestoreResponse = await registerUserInFirestore({
-                    email, password, imageURL, name
+                    email, password, imageURL, name, user: response.user
                 });
                 if (firestoreResponse.status === 'SUCCESS') {
                     return { status: 'SUCCESS', data: null };
@@ -108,4 +109,20 @@ export const registerNewUser = async ({ email, password, imageURL, name }: Regis
         console.log(error);
         return { status: 'ERROR', data: null, error };
     }
+};
+
+export const getUsers = async () => {
+    const usersCollection = db.collection('users');
+    const users = await usersCollection.get();
+
+    const usersList = users.docs.map((doc: any) => {
+        return {
+            _id: doc.data()._id,
+            email: doc.data().email,
+            imageURL: doc.data().imageURL,
+            name: doc.data().name,
+        };
+    });
+
+    return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
