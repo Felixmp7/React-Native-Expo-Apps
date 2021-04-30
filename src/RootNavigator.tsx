@@ -17,9 +17,7 @@ const RootNavigator = () => (
 );
 
 const Navigation = ({ colorScheme }: { colorScheme: ColorSchemeName }) => (
-    <NavigationContainer
-        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-    >
+    <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <RootNavigator />
     </NavigationContainer>
 );
