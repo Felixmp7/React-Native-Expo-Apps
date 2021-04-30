@@ -36,3 +36,8 @@ type ContextProps = {
     state: State;
     dispatch: Dispatch
 };
+type ApiResponseProps = {
+    status: string;
+    data: any,
+    error?: any
+};
