@@ -3,20 +3,5 @@
   "compilerOptions": {
     "jsx": "react",
     "strict": true,
-    "baseUrl": "src",
-    "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@hooks/*": [
-        "./hooks/*"
-      ],
-      "@screens/*": [
-        "./screens/*"
-      ],
-      "@navigation/*": [
-        "./navigation/*"
-      ],
-    },
   }
 }
