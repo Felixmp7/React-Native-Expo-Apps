@@ -2,7 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import ChatScreen from './screens/ChatScreen';
+import ChatRoom from './screens/ChatRoom';
+import ChatListScreen from './screens/ChatListScreen';
 
 const Chat = createStackNavigator();
 
@@ -20,7 +21,12 @@ const ChatNavigator = () => (
         />
         <Chat.Screen
             name="ChatRoom"
-            component={ChatScreen}
+            component={ChatRoom}
+        />
+        <Chat.Screen
+            name="ChatListScreen"
+            options={{ headerShown: false }}
+            component={ChatListScreen}
         />
     </Chat.Navigator>
 );
