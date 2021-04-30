@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import {
     Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons,
 } from '@expo/vector-icons';
@@ -12,7 +13,7 @@ export default function useCachedResources() {
     React.useEffect(() => {
         async function loadResourcesAndDataAsync() {
             try {
-                void SplashScreen.preventAutoHideAsync();
+                SplashScreen.preventAutoHideAsync();
 
                 // Load fonts
                 await Font.loadAsync({
@@ -27,11 +28,11 @@ export default function useCachedResources() {
                 console.warn(e);
             } finally {
                 setLoadingComplete(true);
-                void SplashScreen.hideAsync();
+                SplashScreen.hideAsync();
             }
         }
 
-        void loadResourcesAndDataAsync();
+        loadResourcesAndDataAsync();
     }, []);
 
     return isLoadingComplete;
