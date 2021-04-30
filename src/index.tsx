@@ -15,14 +15,14 @@ const HomeScreen = ({ navigation }: any): JSX.Element => {
             </View>
 
             <View style={tw('items-center')}>
-                <Pressable onPress={navigateTo('Todos')} style={tw('mb-3')}>
+                <Pressable onPress={() => navigateTo('Todos')} style={tw('mb-3')}>
                     <View style={tw('bg-green-100 p-5 mb-2 rounded-full')}>
                         <FontAwesome5 style={tw('text-green-500')} name="tasks" size={40} />
                     </View>
                     <Text style={tw('text-lg text-center text-green-500')}>Todos</Text>
                 </Pressable>
                 <View style={tw('flex-row')}>
-                    <Pressable onPress={navigateTo('Chat')} style={tw('mr-8')}>
+                    <Pressable onPress={() => navigateTo('Chat')} style={tw('mr-8')}>
                         <View style={tw('bg-indigo-100 p-5 rounded-full')}>
                             <Ionicons style={tw('text-indigo-400')} name="chatbubbles-sharp" size={40} />
                         </View>
