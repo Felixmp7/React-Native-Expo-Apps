@@ -4,20 +4,19 @@ import tw from 'tailwind-rn';
 import { Input, Button } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../services/firebase';
+import { login } from '../services/api';
 
-const LoginScreen = ({ navigation }:any): JSX.Element => {
+const LoginScreen = ({ navigation }: any): JSX.Element => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        auth.signInWithEmailAndPassword(email, password)
-            .then(() => {
-                Alert.alert('Notification', 'Login successfully');
-                navigation.replace('ChatRoom');
-            })
-            .catch((error: any) => {
-                Alert.alert('Notification', error.message);
-            });
+    const handleLogin = async () => {
+        const response = await login(email, password);
+        if (response.status === 'SUCCESS') {
+            navigation.replace('ChatRoom');
+        } else {
+            Alert.alert('Notification', response.error.message);
+        }
     };
 
     useEffect(() => {
@@ -25,8 +24,8 @@ const LoginScreen = ({ navigation }:any): JSX.Element => {
             if (user) {
                 navigation.replace('ChatRoom');
             }
-            return unsubscribe;
         });
+        return () => unsubscribe();
     }, []);
 
     return (
