@@ -22,6 +22,7 @@ const ChatNavigator = () => (
         />
         <Chat.Screen
             name="ChatRoom"
+            options={{ headerShown: false }}
             component={ChatRoom}
         />
         <Chat.Screen
