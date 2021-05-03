@@ -42,7 +42,7 @@ export const login = async (email: string, password: string): Promise<ApiRespons
 const registerUserInFirestore = async ({ email, name, imageURL, user }: RegisterProps): Promise<ApiResponseProps> => {
     try {
         const response = await db.collection('users').add({ name, email, imageURL, _id: user.uid });
-        if(response.id) {
+        if (response.id) {
             return {
                 status: 'SUCCESS',
                 data: null
@@ -51,7 +51,7 @@ const registerUserInFirestore = async ({ email, name, imageURL, user }: Register
         return {
             status: 'ERROR',
             data: null,
-            error: { message: 'User not registered in Firestore'}
+            error: { message: 'User not registered in Firestore' }
         };
     } catch (error) {
         return {
@@ -65,7 +65,7 @@ const updateProfile = async ({ name, imageURL, user }: UpdateProps): Promise<Api
     try {
         await user.updateProfile({
             displayName: name,
-            photoURL: imageURL || defaultImage,
+            photoURL: imageURL.length === 0 ? defaultImage : imageURL,
         });
         return {
             status: 'SUCCESS',
@@ -80,7 +80,12 @@ const updateProfile = async ({ name, imageURL, user }: UpdateProps): Promise<Api
     }
 };
 
-export const registerNewUser = async ({ email, password, imageURL, name }: RegisterProps): Promise<ApiResponseProps> => {
+export const registerNewUser = async ({
+    email,
+    password,
+    imageURL,
+    name
+}: RegisterProps): Promise<ApiResponseProps> => {
     try {
         const response = await auth.createUserWithEmailAndPassword(email, password);
         if (response.user) {
@@ -109,20 +114,4 @@ export const registerNewUser = async ({ email, password, imageURL, name }: Regis
         console.log(error);
         return { status: 'ERROR', data: null, error };
     }
-};
-
-export const getUsers = async () => {
-    const usersCollection = db.collection('users');
-    const users = await usersCollection.get();
-
-    const usersList = users.docs.map((doc: any) => {
-        return {
-            _id: doc.data()._id,
-            email: doc.data().email,
-            imageURL: doc.data().imageURL,
-            name: doc.data().name,
-        };
-    });
-
-    return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
