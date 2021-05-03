@@ -20,11 +20,10 @@ const ChatListHeader = () => {
         }
     };
 
-
     return (
         <View style={tw('relative h-16 bg-indigo-900 justify-center items-center')}>
             <Pressable onPress={signOut} style={tw('absolute ml-3 left-0')}>
-                <AntDesign name="leftcircleo" size={24} color="black" />
+                <AntDesign name="leftcircleo" size={24} color="white" />
             </Pressable>
             <Avatar
                 rounded
