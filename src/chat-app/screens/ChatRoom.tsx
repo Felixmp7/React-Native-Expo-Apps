@@ -1,71 +1,61 @@
-import React, { useEffect, useState, useCallback, useLayoutEffect } from 'react';
-import { View, Pressable, Alert } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { Avatar } from 'react-native-elements';
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import React, { useEffect, useState, useCallback } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { auth, db } from '../services/firebase';
+import { addMessage, findConversation } from '../services/chat';
+import ChatRoomHeader from '../components/ChatRoomHeader';
 
-const ChatRoom = ({ navigation }: any): JSX.Element => {
+const ChatRoom = ({ route }: any): JSX.Element => {
     const [messages, setMessages] = useState<Array<any>>([]);
+    const [chatId, setChatId] = useState<any>(undefined);
+    const { userData } = route.params;
 
-    const onSend = useCallback((messagesList: Array<any> = []) => {
+    const onSend = useCallback(async (messagesList: Array<any> = []) => {
         const newMessage = { ...messagesList[0] };
-        db.collection('chats').add(newMessage);
-    }, []);
+        await addMessage(newMessage, chatId);
+    }, [chatId]);
 
-    const signOut = () => auth.signOut().then(() => navigation.replace('LoginScreen'))
-        .catch((error: any) => Alert.alert(error.message));
+    const findChatId = async () => {
+        const chatId = await findConversation(userData);
+        setChatId(chatId);
+    };
 
-    const UserAvatar = (
-        <View style={tw('pl-3')}>
-            <Avatar
-                rounded
-                source={{ uri: auth?.currentUser?.photoURL }}
-            />
-        </View>
-    );
-
-    const SignOutButton = (
-        <Pressable onPress={signOut} style={tw('pr-3')}>
-            <FontAwesome name="sign-out" size={24} color="black" />
-        </Pressable>
-    );
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => UserAvatar,
-            headerRight: () => SignOutButton
-        });
-    }, []);
+    useEffect(() => void findChatId(), []);
 
     useEffect(() => {
-        const chats = db.collection('chats')
-            .orderBy('createdAt', 'desc')
-            .onSnapshot((snapshot: any) => {
-                const chatMessages = snapshot.docs.map((doc: any) => ({
-                    _id: doc.data()._id,
-                    createdAt: doc.data().createdAt.toDate(),
-                    text: doc.data().text,
-                    user: doc.data().user,
-                }));
-                setMessages([...chatMessages]);
-            });
+        if (chatId) {
+            const unsubscribe = db.collection('chats').doc(chatId)
+                .onSnapshot((doc: any) => {
+                    const chatMessages = doc.data().messages.map((doc: any) => ({
+                        _id: doc._id,
+                        createdAt: doc.createdAt.toDate(),
+                        text: doc.text,
+                        user: doc.user,
+                    }));
+                    setMessages([...chatMessages]);
+                });
+            return () => unsubscribe();
+        }
+        return;
 
-        return chats;
-    }, []);
+    }, [chatId]);
 
     return (
-        <GiftedChat
-            messages={messages}
-            showAvatarForEveryMessage
-            onSend={(newMessages) => onSend(newMessages)}
-            user={{
-                _id: auth?.currentUser?.email,
-                name: auth?.currentUser?.displayName,
-                avatar: auth?.currentUser?.photoURL,
-            }}
-        />
+        <SafeAreaView style={tw('flex-1')}>
+            <ChatRoomHeader {...userData} />
+            <GiftedChat
+                messages={messages}
+                messagesContainerStyle={{ backgroundColor: '#fff' }}
+                onSend={(newMessages) => onSend(newMessages)}
+                user={{
+                    _id: auth?.currentUser?.uid,
+                    name: auth?.currentUser?.displayName,
+                    avatar: auth?.currentUser?.photoURL,
+                }}
+            />
+        </SafeAreaView>
     );
 };
 
