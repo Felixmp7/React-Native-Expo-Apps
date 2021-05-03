@@ -4,7 +4,7 @@ import tw from 'tailwind-rn';
 import { Input, Button } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../services/firebase';
-import { login } from '../services/api';
+import { login } from '../services/auth';
 
 const LoginScreen = ({ navigation }: any): JSX.Element => {
     const [email, setEmail] = useState('');

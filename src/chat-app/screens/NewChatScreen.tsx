@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import tw from 'tailwind-rn';
-import { getUsers } from '../services/api';
+import { getUsers } from '../services/chat';
 import UserCard from '../components/UserCard';
 
 type UserProps = {

@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import tw from 'tailwind-rn';
 import { Input, Button } from 'react-native-elements';
 import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
-import { registerNewUser } from '../services/api';
+import { registerNewUser } from '../services/auth';
 
 const RegisterScreen = (): JSX.Element => {
     const [name, setName] = useState('');
