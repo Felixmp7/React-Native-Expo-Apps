@@ -4,27 +4,39 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import ConversationCard from '../components/ConversationCard';
 import ChatListHeader from '../components/ChatListHeader';
-import { getConversations, getUserDocument } from '../services/chat';
+import { auth, db } from '../services/firebase';
 
 const ChatListScreen = (): JSX.Element => {
     const [chats, setChats] = useState<Array<any>>([]);
 
-    const handleLoadConversations = async () => {
-        try {
-            const conversationsList = await getConversations();
-            console.log(conversationsList);
-            if (conversationsList?.length >= 0) {
-                const conversations: Array<any> = await Promise.all(conversationsList.map(async (conversation: any) => {
-                    return await getUserDocument(conversation.participants[0]);
-                }));
-                setChats([...conversations]);
-            }
-        } catch (error) {
-            Alert.alert(error.message);
-        }
+    const currentUser = {
+        _id: auth.currentUser.uid,
+        name: auth.currentUser.displayName,
+        imageURL: auth.currentUser.photoURL,
+        email: auth.currentUser.email,
     };
 
-    useEffect(() => void handleLoadConversations(), []);
+    useEffect(() => {
+        const unsubscribe = db.collection('chats')
+            .where('participants', 'array-contains', currentUser)
+            .onSnapshot((querySnapshot: any) => {
+                if (querySnapshot) {
+                    const conversations: Array<any> = [];
+                    querySnapshot.forEach((doc: any) => {
+                        const found = doc.data().participants.find((participant: any) => participant._id !== currentUser._id);
+                        if (doc.data().messages.length) {
+                            conversations.push({
+                                ...found,
+                                lastMessage: doc.data().messages[0].text
+                            });
+                        }
+                    });
+                    setChats(conversations);
+                }
+            },
+            (error: any) => Alert.alert('Notification', error.message));
+        return () => unsubscribe();
+    }, []);
 
     return (
         <SafeAreaView style={tw('flex-1')}>
