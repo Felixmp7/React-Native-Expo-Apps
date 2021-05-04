@@ -5,7 +5,6 @@ import { Avatar } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import tw from 'tailwind-rn';
-import defaultImage from '../../constants/ProfileImages';
 
 interface UserProps {
     name: string;
@@ -30,7 +29,7 @@ const UserCard = ({ name, email, imageURL, _id }: UserProps): JSX.Element => {
                 <Avatar
                     rounded
                     size={40}
-                    source={{ uri: imageURL || defaultImage }}
+                    source={{ uri: imageURL }}
                 />
                 <View style={tw('ml-2 w-3/4')}>
                     <Text numberOfLines={1} style={tw('text-lg')}>{name}</Text>
