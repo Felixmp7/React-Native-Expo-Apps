@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Alert, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Entypo, AntDesign } from '@expo/vector-icons';
@@ -14,6 +15,7 @@ const ChatListHeader = () => {
     const signOut = async () => {
         try {
             await auth.signOut();
+            await AsyncStorage.removeItem('@currentDocId');
             navigation.pop();
         } catch (error) {
             Alert.alert(error.message);
