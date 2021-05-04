@@ -1,9 +1,27 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth, db } from './firebase';
 
 interface ConversationProps {
     participants: Array<string>;
     chatId: string;
 }
+interface AddConversationProps {
+    userId: string;
+    participantId: string;
+    newChatDocumentId: string;
+}
+
+export const saveCurrentDocumentId = async (): Promise<void> => {
+    try {
+        const { uid } = auth.currentUser;
+        const snapshot = await db.collection('users').where('_id', '==', uid).limit(1).get();
+        const currentDocId = snapshot.docs[0].id;
+        void await AsyncStorage.setItem('@currentDocId', currentDocId);
+    } catch (error) {
+        console.log('ERROR EN saveCurrentDocumentId');
+        console.log(error.message);
+    }
+};
 
 export const getUsers = async () => {
     const usersCollection = db.collection('users');
@@ -21,65 +39,106 @@ export const getUsers = async () => {
     return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
 
-export const createNewChat = async (participantData: any) => {
-    const { uid } = auth.currentUser;
-    const participantId = participantData._id;
+const getDocId = async () => {
+    try {
+        const docId = await AsyncStorage.getItem('@currentDocId');
+        if (docId) return docId;
 
-    const newChatDocument = await db.collection('chats').add({
-        messages: [],
-        participants: [ uid, participantId ]
-    });
+        return undefined;
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
-    const usersRef = db.collection('users');
-    const currentPromise = usersRef.where('_id', '==', uid).get();
-    const participantPromise = usersRef.where('_id', '==', participantId).get();
-
-    const [currentSnapshot, participantSnapshot] = await Promise.all([ currentPromise, participantPromise ]);
-
-    const currentUserDocument = usersRef.doc(currentSnapshot.docs[0].id);
-    const participantDocument = usersRef.doc(participantSnapshot.docs[0].id);
-
-    const currentUserData = await currentUserDocument.get();
-    const { conversations } = currentUserData.data();
-    conversations.unshift({ chatId: newChatDocument.id, participants: [participantId] });
-
-    const currentUpdatePromise = currentUserDocument.update({ conversations });
-
-    const participantUserData = await participantDocument.get();
-    const { conversations: participantConversations } = participantUserData.data();
-    conversations.unshift({ chatId: newChatDocument.id, participants: [participantId] });
-    const participantUpdatePromise = participantDocument.update({ conversations: participantConversations });
-
-    await Promise.all([currentUpdatePromise, participantUpdatePromise]);
-    return newChatDocument.id;
+export const getCurrentDocument = async () => {
+    try {
+        const docId = await getDocId();
+        const currentReference = db.collection('users').doc(docId);
+        const currentDocument = await currentReference.get();
+        return currentDocument;
+    } catch (error) {
+        console.log(error);
+        console.log('ERROR EN getCurrentDocument');
+    }
 };
 
 export const getUserDocument = async (id: string) => {
-    const usersRef = db.collection('users');
-    const snapshot = await usersRef.where('_id', '==', id).get();
-    return snapshot.docs[0].data();
+    try {
+        const snapshot = await db.collection('users').where('_id', '==', id).limit(1).get();
+        return snapshot.docs[0];
+    } catch (error) {
+        console.log(error);
+        console.log('ERROR EN getUserDocument');
+    }
+};
+
+const addConversationToUser = async ({
+    userId,
+    participantId,
+    newChatDocumentId
+}: AddConversationProps) => {
+    try {
+        const targetDoc = await getUserDocument(userId);
+        const userDocument = await db.collection('users').doc(targetDoc.id);
+
+        const { conversations = [] } = targetDoc.data();
+        conversations.unshift({ chatId: newChatDocumentId, participants: [ participantId ] });
+
+        await userDocument.update({ conversations });
+    } catch (error) {
+        console.log('ERROR EN addConversationToUser');
+        console.log(error);
+    }
+};
+
+const createNewChat = async (participantData: any) => {
+    try {
+        const { uid } = auth.currentUser;
+        const currentUserData = {
+            _id: uid,
+            name: auth.currentUser.displayName,
+            imageURL: auth.currentUser.photoURL,
+            email: auth.currentUser.email,
+        };
+        const participantId = participantData._id;
+
+        const newChatDocument = await db.collection('chats').add({
+            messages: [],
+            participants: [currentUserData, participantData]
+        });
+
+        await Promise.all([
+            addConversationToUser({ userId: uid, participantId, newChatDocumentId: newChatDocument.id }),
+            addConversationToUser({ userId: participantId, participantId: uid, newChatDocumentId: newChatDocument.id }),
+        ]);
+
+        return newChatDocument.id;
+    } catch (error) {
+        console.log('ERROR EN createNewChat');
+        console.log(error);
+    }
 };
 
 export const findConversation = async (participant: any) => {
-    let found: string | undefined;
-    let chatId: string | undefined;
-    const { uid } = auth.currentUser;
+    let chatIdFounded: string | undefined;
     const participantId = participant._id;
+
     try {
-        const currentUserDoc = await getUserDocument(uid);
-        if (currentUserDoc.conversations) {
-            currentUserDoc.conversations.forEach((conversation: ConversationProps) => {
-                found = conversation.participants.find((participant: string) => participant === participantId);
-                if (found) {
-                    return ({ chatId } = conversation);
+        const currentUserDoc = await getCurrentDocument();
+        if (currentUserDoc.data().conversations?.length) {
+            currentUserDoc.data().conversations.forEach((conversation: ConversationProps) => {
+                const conversationExist = conversation.participants.some((participant: string) => participant === participantId);
+                if (conversationExist) {
+                    chatIdFounded = conversation.chatId;
                 }
             });
 
-            if (found) return chatId;
+            if (chatIdFounded) return chatIdFounded;
         }
 
         return await createNewChat(participant);
     } catch (error) {
+        console.log('ERROR EN findConversation');
         console.log(error);
     }
 };
@@ -90,18 +149,10 @@ export const addMessage = async (newMessage: any, chatId: string) => {
         const chatData = await chatDocument.get();
         const { messages } = chatData.data();
         messages.unshift(newMessage);
+
         await chatDocument.update({ messages });
     } catch (error) {
-        console.log(error);
-    }
-};
-
-export const getConversations = async () => {
-    const { uid } = auth.currentUser;
-    try {
-        const currentUserDoc = await getUserDocument(uid);
-        return currentUserDoc.conversations;
-    } catch (error) {
+        console.log('ERROR EN addMessage');
         console.log(error);
     }
 };
