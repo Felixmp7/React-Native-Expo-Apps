@@ -13,9 +13,7 @@ const RegisterScreen = (): JSX.Element => {
 
     const handleRegister = async () => {
         const response = await registerNewUser({ email, password, imageURL, name });
-        if (response.status === 'SUCCESS') {
-            Alert.alert('Notification', `User ${name} was created successfully`);
-        } else {
+        if (response.status === 'ERROR') {
             Alert.alert('Notification', response.error.message);
         }
     };
