@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { format } from 'date-fns';
 import tw from 'tailwind-rn';
 
 interface ConversationProps {
@@ -11,10 +12,20 @@ interface ConversationProps {
     imageURL: string;
     _id: string;
     lastMessage: string;
+    lastMessageTimestamp: Date;
 }
 
-const ConversationCard = ({ name, email, imageURL, _id, lastMessage }: ConversationProps): JSX.Element => {
+const ConversationCard = ({
+    name,
+    email,
+    imageURL,
+    _id,
+    lastMessage,
+    lastMessageTimestamp
+}: ConversationProps): JSX.Element => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+    const lastMessageTime = format(lastMessageTimestamp, 'p');
+
     const handleOpenChat = () => {
         const userData = { name, email, imageURL, _id };
         navigation.navigate('ChatRoom', { userData });
@@ -36,6 +47,7 @@ const ConversationCard = ({ name, email, imageURL, _id, lastMessage }: Conversat
                     <Text numberOfLines={1} style={tw('text-xs text-gray-500')}>{lastMessage}</Text>
                 </View>
             </View>
+            <Text style={tw('text-xs text-gray-500')}>{lastMessageTime}</Text>
         </TouchableOpacity>
     );
 };
