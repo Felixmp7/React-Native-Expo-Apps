@@ -23,7 +23,7 @@ const UserCard = ({ name, email, imageURL, _id }: UserProps): JSX.Element => {
     return (
         <TouchableOpacity
             onPress={handleCreateNewChat}
-            style={tw('flex-row p-3 justify-between items-center border border-red-500')}
+            style={tw('flex-row p-3 justify-between items-center border-2 border-gray-300 rounded')}
         >
             <View style={tw('flex-row items-center')}>
                 <Avatar
