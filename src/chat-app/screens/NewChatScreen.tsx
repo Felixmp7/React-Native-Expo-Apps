@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator } from 'react-native';
 import tw from 'tailwind-rn';
 import { getUsers } from '../services/chat';
 import UserCard from '../components/UserCard';
@@ -24,7 +24,7 @@ const NewChatScreen = (): JSX.Element => {
     useEffect(() => void handleLoadUsers(), []);
 
     if(isLoading) {
-        return <Text>Loading...</Text>;
+        return <ActivityIndicator size="large" color="#190098" />;
     }
 
     return (
