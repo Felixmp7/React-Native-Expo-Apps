@@ -104,7 +104,8 @@ const createNewChat = async (participantData: any) => {
 
         const newChatDocument = await db.collection('chats').add({
             messages: [],
-            participants: [currentUserData, participantData]
+            participantIds: [uid, participantId],
+            participantsData: [currentUserData, participantData],
         });
 
         await Promise.all([
