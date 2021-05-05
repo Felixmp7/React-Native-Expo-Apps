@@ -8,7 +8,7 @@ import tw from 'tailwind-rn';
 
 const ChatRoomHeader = ({ imageURL, name, email }: any) => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
-    const goBack = () => navigation.goBack();
+    const goBack = () => navigation.navigate('ChatListScreen');
 
     return (
         <View style={tw('flex-row h-16 items-center border-b border-gray-400')}>
