@@ -39,7 +39,7 @@ export const getUsers = async () => {
     return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
 
-const getDocId = async () => {
+const getCurrentDocumentId = async () => {
     try {
         const docId = await AsyncStorage.getItem('@currentDocId');
         if (docId) return docId;
@@ -47,12 +47,13 @@ const getDocId = async () => {
         return undefined;
     } catch (error) {
         console.log(error.message);
+        console.log('ERROR EN getCurrentDocumentId');
     }
 };
 
 export const getCurrentDocument = async () => {
     try {
-        const docId = await getDocId();
+        const docId = await getCurrentDocumentId();
         const currentReference = db.collection('users').doc(docId);
         const currentDocument = await currentReference.get();
         return currentDocument;
