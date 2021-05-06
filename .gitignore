@@ -17,3 +17,5 @@ web-build/
 
 # Firebase credentials
 src/chat-app/services/firebase.js
+
+screenshots/
