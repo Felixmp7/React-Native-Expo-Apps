@@ -1,4 +1,3 @@
-import defaultImage from '../../constants/ProfileImages';
 import { auth, db } from './firebase';
 
 interface RegisterProps {
@@ -63,10 +62,7 @@ const registerUserInFirestore = async ({ email, name, imageURL, user }: Register
 };
 const updateProfile = async ({ name, imageURL, user }: UpdateProps): Promise<ApiResponseProps> => {
     try {
-        await user.updateProfile({
-            displayName: name,
-            photoURL: imageURL.length === 0 ? defaultImage : imageURL,
-        });
+        await user.updateProfile({ displayName: name, photoURL: imageURL });
         return {
             status: 'SUCCESS',
             data: null

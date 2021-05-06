@@ -5,6 +5,7 @@ import { Input, Button } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../services/firebase';
 import { login } from '../services/auth';
+import { saveCurrentDocumentId } from '../services/chat';
 
 const LoginScreen = ({ navigation }: any): JSX.Element => {
     const [email, setEmail] = useState('');
@@ -12,9 +13,7 @@ const LoginScreen = ({ navigation }: any): JSX.Element => {
 
     const handleLogin = async () => {
         const response = await login(email, password);
-        if (response.status === 'SUCCESS') {
-            navigation.replace('ChatListScreen');
-        } else {
+        if (response.status === 'ERROR') {
             Alert.alert('Notification', response.error.message);
         }
     };
@@ -22,7 +21,9 @@ const LoginScreen = ({ navigation }: any): JSX.Element => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user: any) => {
             if (user) {
-                navigation.replace('ChatListScreen');
+                saveCurrentDocumentId()
+                    .then(() => navigation.replace('ChatListScreen'))
+                    .catch((error) => Alert.alert('LoginScreen', error.message));
             }
         });
         return () => unsubscribe();

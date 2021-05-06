@@ -28,11 +28,11 @@ const HomeScreen = ({ navigation }: any): JSX.Element => {
                         </View>
                         <Text style={tw('text-lg text-center text-indigo-500')}>Chat</Text>
                     </Pressable>
-                    <Pressable>
-                        <View style={tw('bg-blue-100 p-5 rounded-full')}>
-                            <MaterialCommunityIcons style={tw('text-blue-400')} name="weather-cloudy" size={40} />
+                    <Pressable disabled style={tw('items-center justify-center')}>
+                        <View style={tw('bg-gray-100 p-5 rounded-full')}>
+                            <MaterialCommunityIcons style={tw('text-gray-400')} name="weather-cloudy" size={40} />
                         </View>
-                        <Text style={tw('text-lg text-center text-blue-500')}>Weather</Text>
+                        <Text style={tw('text-lg text-gray-400')}>Soon</Text>
                     </Pressable>
                 </View>
             </View>
