@@ -9,9 +9,8 @@ const App = (): JSX.Element | null => {
     const isLoadingComplete = useCachedResources();
     const colorScheme = useColorScheme();
 
-    if (!isLoadingComplete) {
-        return null;
-    }
+    if (!isLoadingComplete) return null;
+
     return (
         <SafeAreaProvider>
             <Navigation colorScheme={colorScheme} />

@@ -4,19 +4,6 @@ type RootStackParamList = {
     NotFound: undefined;
 };
 
-type BottomTabParamList = {
-    TabOne: undefined;
-    TabTwo: undefined;
-};
-
-type TabOneParamList = {
-    TabOneScreen: undefined;
-};
-
-type TabTwoParamList = {
-    TabTwoScreen: undefined;
-};
-
 type Todos = {
     id: string;
     task: string;

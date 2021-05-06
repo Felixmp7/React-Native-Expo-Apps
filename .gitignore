@@ -14,3 +14,8 @@ web-build/
 
 # VSCode
 .vscode
+
+# Firebase credentials
+src/chat-app/services/firebase.js
+
+screenshots/

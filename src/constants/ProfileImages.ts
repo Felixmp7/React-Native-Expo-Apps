@@ -1,3 +1,3 @@
-const defaultImage = 'https://placeimg.com/140/140/any';
+const defaultImage = '../../assets/profile-default.png';
 
 export default defaultImage;

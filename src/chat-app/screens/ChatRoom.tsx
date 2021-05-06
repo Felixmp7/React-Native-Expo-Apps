@@ -28,11 +28,11 @@ const ChatRoom = ({ route }: any): JSX.Element => {
         if (chatId) {
             const unsubscribe = db.collection('chats').doc(chatId)
                 .onSnapshot((doc: any) => {
-                    const chatMessages = doc.data().messages.map((doc: any) => ({
-                        _id: doc._id,
-                        createdAt: doc.createdAt.toDate(),
-                        text: doc.text,
-                        user: doc.user,
+                    const chatMessages = doc.data().messages.map((message: any) => ({
+                        _id: message._id,
+                        createdAt: message.createdAt.toDate(),
+                        text: message.text,
+                        user: message.user,
                     }));
                     setMessages([...chatMessages]);
                 });

@@ -4,35 +4,41 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import ConversationCard from '../components/ConversationCard';
 import ChatListHeader from '../components/ChatListHeader';
-import { getConversations, getUserDocument } from '../services/chat';
+import { auth, db } from '../services/firebase';
 
 const ChatListScreen = (): JSX.Element => {
     const [chats, setChats] = useState<Array<any>>([]);
 
-    const handleLoadConversations = async () => {
-        try {
-            const conversationsList = await getConversations();
-            console.log(conversationsList);
-            if (conversationsList?.length >= 0) {
-                const conversations: Array<any> = await Promise.all(conversationsList.map(async (conversation: any) => {
-                    return await getUserDocument(conversation.participants[0]);
-                }));
-                setChats([...conversations]);
-            }
-        } catch (error) {
-            Alert.alert(error.message);
-        }
-    };
+    const { uid } = auth.currentUser;
 
-    useEffect(() => void handleLoadConversations(), []);
+    useEffect(() => {
+        const unsubscribe = db.collection('chats')
+            .where('participantIds', 'array-contains', uid)
+            .onSnapshot((querySnapshot: any) => {
+                const conversations: Array<any> = [];
+                querySnapshot.forEach((doc: any) => {
+                    const found = doc.data().participantsData.find((participant: any) => participant._id !== uid);
+                    if (doc.data().messages.length) {
+                        conversations.push({
+                            ...found,
+                            lastMessage: doc.data().messages[0].text,
+                            lastMessageTimestamp: doc.data().messages[0].createdAt.toDate()
+                        });
+                    }
+                });
+                setChats(conversations);
+            },
+            (error: any) => Alert.alert('Notification', error.message));
+        return () => unsubscribe();
+    }, []);
 
     return (
         <SafeAreaView style={tw('flex-1')}>
             <ChatListHeader />
-            <View style={tw('flex-1 p-3')}>
+            <View style={tw('flex-1 p-3 bg-white')}>
                 <FlatList
                     data={chats}
-                    keyExtractor={(item, index) => String(index)}
+                    keyExtractor={(item) => String(item._id)}
                     renderItem={({ item }) => <ConversationCard {...item} />}
                     ListEmptyComponent={<Text style={tw('text-3xl text-center text-gray-500')}>No Chats</Text>}
                 />
