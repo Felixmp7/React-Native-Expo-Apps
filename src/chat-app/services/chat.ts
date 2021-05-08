@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { chats, users } from '../../constants';
 import { auth, db } from './firebase';
 
 interface ConversationProps {
@@ -11,32 +12,18 @@ interface AddConversationProps {
     newChatDocumentId: string;
 }
 
-export const saveCurrentDocumentId = async (): Promise<void> => {
+export const setCurrentDocumentId = async (): Promise<void> => {
     try {
         const { uid } = auth.currentUser;
-        const snapshot = await db.collection('users').where('_id', '==', uid).limit(1).get();
+        const snapshot = await db.collection(users).where('_id', '==', uid).limit(1).get();
         const currentDocId = snapshot.docs[0].id;
         await AsyncStorage.setItem('@currentDocId', currentDocId);
 
         return;
     } catch (error) {
-        console.log('ERROR EN saveCurrentDocumentId');
+        console.log('ERROR EN setCurrentDocumentId');
         console.log(error.message);
     }
-};
-
-export const getUsers = async () => {
-    const usersCollection = db.collection('users');
-    const users = await usersCollection.get();
-
-    const usersList = users.docs.map((doc: any) => ({
-        _id: doc.data()._id,
-        email: doc.data().email,
-        imageURL: doc.data().imageURL,
-        name: doc.data().name,
-    }));
-
-    return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
 
 const getCurrentDocumentId = async () => {
@@ -52,10 +39,24 @@ const getCurrentDocumentId = async () => {
     }
 };
 
+export const getUsers = async () => {
+    const usersCollection = db.collection(users);
+    const snapshot = await usersCollection.get();
+
+    const usersList = snapshot.docs.map((doc: any) => ({
+        _id: doc.data()._id,
+        email: doc.data().email,
+        imageURL: doc.data().imageURL,
+        name: doc.data().name,
+    }));
+
+    return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
+};
+
 export const getCurrentDocument = async () => {
     try {
         const docId = await getCurrentDocumentId();
-        const currentReference = db.collection('users').doc(docId);
+        const currentReference = db.collection(users).doc(docId);
         const currentDocument = await currentReference.get();
         return currentDocument;
     } catch (error) {
@@ -67,7 +68,7 @@ export const getCurrentDocument = async () => {
 
 export const getUserDocument = async (id: string) => {
     try {
-        const snapshot = await db.collection('users').where('_id', '==', id).limit(1).get();
+        const snapshot = await db.collection(users).where('_id', '==', id).limit(1).get();
         return snapshot.docs[0];
     } catch (error) {
         console.log(error);
@@ -83,7 +84,7 @@ const addConversationToUser = async ({
 }: AddConversationProps) => {
     try {
         const targetDoc = await getUserDocument(userId);
-        const userDocument = await db.collection('users').doc(targetDoc.id);
+        const userDocument = await db.collection(users).doc(targetDoc.id);
 
         const { conversations = [] } = targetDoc.data();
         conversations.unshift({ chatId: newChatDocumentId, participants: [participantId] });
@@ -107,7 +108,7 @@ const createNewChat = async (participantData: any) => {
         };
         const participantId = participantData._id;
 
-        const newChatDocument = await db.collection('chats').add({
+        const newChatDocument = await db.collection(chats).add({
             messages: [],
             participantIds: [uid, participantId],
             participantsData: [currentUserData, participantData],
@@ -126,21 +127,42 @@ const createNewChat = async (participantData: any) => {
     }
 };
 
-export const findConversation = async (participant: any) => {
+const checkIsPreviousChatExist = async ({ conversations, participantId }: any) => {
     let chatIdFounded: string | undefined;
+
+    try {
+        conversations.forEach((conversation: ConversationProps) => {
+            const conversationExist = conversation.participants.some((participId: string) => participId === participantId);
+            if (conversationExist) {
+                chatIdFounded = conversation.chatId;
+            }
+        });
+
+        if (chatIdFounded) {
+            return chatIdFounded;
+        }
+        return undefined;
+    } catch (error) {
+        console.log('ERROR EN checkIsPreviousChatExist');
+        console.log(error);
+        return error;
+    }
+};
+
+export const findConversation = async (participant: any) => {
     const participantId = participant._id;
 
     try {
         const currentUserDoc = await getCurrentDocument();
-        if (currentUserDoc.data().conversations?.length) {
-            currentUserDoc.data().conversations.forEach((conversation: ConversationProps) => {
-                const conversationExist = conversation.participants.some((participId: string) => participId === participantId);
-                if (conversationExist) {
-                    chatIdFounded = conversation.chatId;
-                }
+        const hasConversations = currentUserDoc.data().conversations?.length || false;
+
+        if (hasConversations) {
+            const chatId = await checkIsPreviousChatExist({
+                conversations: currentUserDoc.data().conversations,
+                participantId,
             });
 
-            if (chatIdFounded) return chatIdFounded;
+            if (chatId) return chatId;
         }
 
         return await createNewChat(participant);
@@ -153,7 +175,7 @@ export const findConversation = async (participant: any) => {
 
 export const addMessage = async (newMessage: any, chatId: string): Promise<void> => {
     try {
-        const chatDocument = await db.collection('chats').doc(chatId);
+        const chatDocument = await db.collection(chats).doc(chatId);
         const chatData = await chatDocument.get();
         const { messages } = chatData.data();
         messages.unshift(newMessage);

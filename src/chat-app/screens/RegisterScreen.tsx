@@ -4,6 +4,7 @@ import tw from 'tailwind-rn';
 import { Input, Button } from 'react-native-elements';
 import { MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { registerNewUser } from '../services/auth';
+import { ERROR } from '../../constants';
 
 const RegisterScreen = (): JSX.Element => {
     const [name, setName] = useState('');
@@ -15,7 +16,7 @@ const RegisterScreen = (): JSX.Element => {
         const response = await registerNewUser({
             email, password, imageURL, name,
         });
-        if (response.status === 'ERROR') {
+        if (response.status === ERROR) {
             Alert.alert('Notification', response.error.message);
         }
     };

@@ -6,6 +6,7 @@ import { GiftedChat } from 'react-native-gifted-chat';
 import { auth, db } from '../services/firebase';
 import { addMessage, findConversation } from '../services/chat';
 import ChatRoomHeader from '../components/ChatRoomHeader';
+import { chats } from '../../constants';
 
 const ChatRoom = ({ route }: any): JSX.Element => {
     const [messages, setMessages] = useState<Array<any>>([]);
@@ -26,7 +27,7 @@ const ChatRoom = ({ route }: any): JSX.Element => {
 
     useEffect(() => {
         if (chatId) {
-            const unsubscribe = db.collection('chats').doc(chatId)
+            const unsubscribe = db.collection(chats).doc(chatId)
                 .onSnapshot((doc: any) => {
                     const chatMessages = doc.data().messages.map((message: any) => ({
                         _id: message._id,
