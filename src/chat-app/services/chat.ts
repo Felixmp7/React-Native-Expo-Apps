@@ -27,14 +27,12 @@ export const getUsers = async () => {
     const usersCollection = db.collection('users');
     const users = await usersCollection.get();
 
-    const usersList = users.docs.map((doc: any) => {
-        return {
-            _id: doc.data()._id,
-            email: doc.data().email,
-            imageURL: doc.data().imageURL,
-            name: doc.data().name,
-        };
-    });
+    const usersList = users.docs.map((doc: any) => ({
+        _id: doc.data()._id,
+        email: doc.data().email,
+        imageURL: doc.data().imageURL,
+        name: doc.data().name,
+    }));
 
     return usersList.filter((user: any) => user._id !== auth.currentUser.uid);
 };
@@ -76,14 +74,14 @@ export const getUserDocument = async (id: string) => {
 const addConversationToUser = async ({
     userId,
     participantId,
-    newChatDocumentId
+    newChatDocumentId,
 }: AddConversationProps) => {
     try {
         const targetDoc = await getUserDocument(userId);
         const userDocument = await db.collection('users').doc(targetDoc.id);
 
         const { conversations = [] } = targetDoc.data();
-        conversations.unshift({ chatId: newChatDocumentId, participants: [ participantId ] });
+        conversations.unshift({ chatId: newChatDocumentId, participants: [participantId] });
 
         await userDocument.update({ conversations });
     } catch (error) {

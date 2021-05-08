@@ -3,7 +3,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import { ColorSchemeName } from 'react-native';
 import HomeScreen from './index';
-import TodosNavigator from './todos-app/navigation';
+import TodosNavigator from './todos-app/navigation/index';
 import ChatNavigator from './chat-app/ChatNavigator';
 
 const Stack = createStackNavigator();

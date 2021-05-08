@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable no-void */
 import React, { useEffect, useState, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
@@ -17,12 +17,12 @@ const ChatRoom = ({ route }: any): JSX.Element => {
         await addMessage(newMessage, chatId);
     }, [chatId]);
 
-    const findChatId = async () => {
-        const chatId = await findConversation(userData);
-        setChatId(chatId);
-    };
+    const findChatId = useCallback(async (): Promise<void> => {
+        const chatIdFound = await findConversation(userData);
+        setChatId(chatIdFound);
+    }, [userData]);
 
-    useEffect(() => void findChatId(), []);
+    useEffect(() => void findChatId(), [findChatId]);
 
     useEffect(() => {
         if (chatId) {
@@ -38,8 +38,7 @@ const ChatRoom = ({ route }: any): JSX.Element => {
                 });
             return () => unsubscribe();
         }
-        return;
-
+        return () => null;
     }, [chatId]);
 
     return (

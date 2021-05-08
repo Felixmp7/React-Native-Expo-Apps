@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, FlatList, Text } from 'react-native';
+import {
+    Alert, View, FlatList, Text,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'tailwind-rn';
 import ConversationCard from '../components/ConversationCard';
@@ -22,7 +24,7 @@ const ChatListScreen = (): JSX.Element => {
                         conversations.push({
                             ...found,
                             lastMessage: doc.data().messages[0].text,
-                            lastMessageTimestamp: doc.data().messages[0].createdAt.toDate()
+                            lastMessageTimestamp: doc.data().messages[0].createdAt.toDate(),
                         });
                     }
                 });
@@ -30,7 +32,7 @@ const ChatListScreen = (): JSX.Element => {
             },
             (error: any) => Alert.alert('Notification', error.message));
         return () => unsubscribe();
-    }, []);
+    }, [uid]);
 
     return (
         <SafeAreaView style={tw('flex-1')}>
@@ -43,7 +45,7 @@ const ChatListScreen = (): JSX.Element => {
                     ListEmptyComponent={<Text style={tw('text-3xl text-center text-gray-500')}>No Chats</Text>}
                 />
             </View>
-        </SafeAreaView >
+        </SafeAreaView>
     );
 };
 

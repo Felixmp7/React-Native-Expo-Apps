@@ -20,43 +20,47 @@ export const login = async (email: string, password: string): Promise<ApiRespons
         if (response.user) {
             return {
                 status: 'SUCCESS',
-                data: null
+                data: null,
             };
         }
         return {
             status: 'ERROR',
             data: null,
-            error: { message: 'Login error' }
+            error: { message: 'Login error' },
         };
     } catch (error) {
         console.log(error);
         return {
             status: 'ERROR',
             data: null,
-            error
+            error,
         };
     }
 };
 
-const registerUserInFirestore = async ({ email, name, imageURL, user }: RegisterProps): Promise<ApiResponseProps> => {
+const registerUserInFirestore = async ({
+    email, name, imageURL, user,
+}: RegisterProps): Promise<ApiResponseProps> => {
     try {
-        const response = await db.collection('users').add({ name, email, imageURL, _id: user.uid });
+        const response = await db.collection('users').add({
+            name, email, imageURL, _id: user.uid,
+        });
         if (response.id) {
             return {
                 status: 'SUCCESS',
-                data: null
+                data: null,
             };
         }
         return {
             status: 'ERROR',
             data: null,
-            error: { message: 'User not registered in Firestore' }
+            error: { message: 'User not registered in Firestore' },
         };
     } catch (error) {
         return {
             status: 'ERROR',
             data: null,
-            error
+            error,
         };
     }
 };
@@ -65,13 +69,13 @@ const updateProfile = async ({ name, imageURL, user }: UpdateProps): Promise<Api
         await user.updateProfile({ displayName: name, photoURL: imageURL });
         return {
             status: 'SUCCESS',
-            data: null
+            data: null,
         };
     } catch (error) {
         return {
             status: 'ERROR',
             data: null,
-            error
+            error,
         };
     }
 };
@@ -80,7 +84,7 @@ export const registerNewUser = async ({
     email,
     password,
     imageURL,
-    name
+    name,
 }: RegisterProps): Promise<ApiResponseProps> => {
     try {
         const response = await auth.createUserWithEmailAndPassword(email, password);
@@ -88,7 +92,7 @@ export const registerNewUser = async ({
             const updateResponse = await updateProfile({ imageURL, name, user: response.user });
             if (updateResponse.status === 'SUCCESS') {
                 const firestoreResponse = await registerUserInFirestore({
-                    email, password, imageURL, name, user: response.user
+                    email, password, imageURL, name, user: response.user,
                 });
                 if (firestoreResponse.status === 'SUCCESS') {
                     return { status: 'SUCCESS', data: null };
@@ -98,13 +102,13 @@ export const registerNewUser = async ({
             return {
                 status: 'ERROR',
                 data: null,
-                error: { message: 'Error ocurred in updateProfile' }
+                error: { message: 'Error ocurred in updateProfile' },
             };
         }
         return {
             status: 'ERROR',
             data: null,
-            error: { message: 'Register error' }
+            error: { message: 'Register error' },
         };
     } catch (error) {
         console.log(error);

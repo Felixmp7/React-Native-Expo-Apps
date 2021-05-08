@@ -21,13 +21,15 @@ const ConversationCard = ({
     imageURL,
     _id,
     lastMessage,
-    lastMessageTimestamp
+    lastMessageTimestamp,
 }: ConversationProps): JSX.Element => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
     const lastMessageTime = format(lastMessageTimestamp, 'p');
 
     const handleOpenChat = () => {
-        const userData = { name, email, imageURL, _id };
+        const userData = {
+            name, email, imageURL, _id,
+        };
         navigation.navigate('ChatRoom', { userData });
     };
 

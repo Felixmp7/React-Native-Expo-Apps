@@ -12,7 +12,9 @@ const RegisterScreen = (): JSX.Element => {
     const [imageURL, setImageURL] = useState('');
 
     const handleRegister = async () => {
-        const response = await registerNewUser({ email, password, imageURL, name });
+        const response = await registerNewUser({
+            email, password, imageURL, name,
+        });
         if (response.status === 'ERROR') {
             Alert.alert('Notification', response.error.message);
         }

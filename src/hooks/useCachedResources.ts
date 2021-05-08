@@ -1,6 +1,7 @@
+/* eslint-disable global-require */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import {
-    Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons, Entypo
+    Ionicons, FontAwesome5, AntDesign, MaterialCommunityIcons, Entypo,
 } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';

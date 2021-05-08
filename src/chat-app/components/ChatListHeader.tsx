@@ -5,8 +5,8 @@ import { Avatar } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
-import { auth } from '../services/firebase';
 import tw from 'tailwind-rn';
+import { auth } from '../services/firebase';
 
 const ChatListHeader = () => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();

@@ -13,11 +13,15 @@ interface UserProps {
     _id: string;
 }
 
-const UserCard = ({ name, email, imageURL, _id }: UserProps): JSX.Element => {
+const UserCard = ({
+    name, email, imageURL, _id,
+}: UserProps): JSX.Element => {
     const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
 
     const handleCreateNewChat = () => {
-        const userData = { name, email, imageURL, _id };
+        const userData = {
+            name, email, imageURL, _id,
+        };
         navigation.navigate('ChatRoom', { userData });
     };
     return (
