@@ -9,14 +9,20 @@
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "airbnb-typescript",
+        "airbnb/hooks",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:jsx-a11y/recommended",
+        "plugin:react-hooks/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 12,
+        "ecmaVersion": 2020,
         "sourceType": "module",
         "project": "./tsconfig.json"
     },
@@ -26,6 +32,30 @@
         "react-hooks"
     ],
     "rules": {
+        "react/jsx-indent": [
+            "error",
+            4
+        ],
+        "import/no-cycle": [
+            0,
+            {
+                "ignoreExternal": true
+            }
+        ],
+        "react/jsx-indent-props": [
+            "error",
+            4
+        ],
+        "radix": 0,
+        "max-len": [
+            "error",
+            {
+                "code": 180,
+                "ignoreUrls": true,
+                "ignoreComments": true,
+                "ignoreRegExpLiterals": true
+            }
+        ],
         "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }],
         "linebreak-style": [
             "error",
