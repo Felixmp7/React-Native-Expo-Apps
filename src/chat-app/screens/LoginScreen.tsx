@@ -27,7 +27,7 @@ const LoginScreen = ({ navigation }: any): JSX.Element => {
             }
         });
         return () => unsubscribe();
-    }, []);
+    }, [navigation]);
 
     return (
         <View style={tw('flex-1 relative p-3 bg-white')}>
