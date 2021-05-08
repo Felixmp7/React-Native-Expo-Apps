@@ -2,6 +2,8 @@ import * as React from 'react';
 import useTodoReducer from './reducers/useTodoReducer';
 import todos from './todos.json';
 
+type ChildrenNode = { children: React.ReactNode };
+
 export const TodosContext = React.createContext<ContextProps | undefined>(undefined);
 
 const TodosProvider = ({ children }: ChildrenNode): JSX.Element => {

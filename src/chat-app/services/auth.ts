@@ -1,5 +1,11 @@
 import { auth, db } from './firebase';
 
+type ApiResponseProps = {
+    status: string;
+    data: any,
+    error?: any
+};
+
 interface RegisterProps {
     email: string;
     password?: string;
