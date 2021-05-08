@@ -16,7 +16,9 @@ export const saveCurrentDocumentId = async (): Promise<void> => {
         const { uid } = auth.currentUser;
         const snapshot = await db.collection('users').where('_id', '==', uid).limit(1).get();
         const currentDocId = snapshot.docs[0].id;
-        void await AsyncStorage.setItem('@currentDocId', currentDocId);
+        await AsyncStorage.setItem('@currentDocId', currentDocId);
+
+        return;
     } catch (error) {
         console.log('ERROR EN saveCurrentDocumentId');
         console.log(error.message);
@@ -46,6 +48,7 @@ const getCurrentDocumentId = async () => {
     } catch (error) {
         console.log(error.message);
         console.log('ERROR EN getCurrentDocumentId');
+        return error;
     }
 };
 
@@ -58,6 +61,7 @@ export const getCurrentDocument = async () => {
     } catch (error) {
         console.log(error);
         console.log('ERROR EN getCurrentDocument');
+        return error;
     }
 };
 
@@ -68,6 +72,7 @@ export const getUserDocument = async (id: string) => {
     } catch (error) {
         console.log(error);
         console.log('ERROR EN getUserDocument');
+        return error;
     }
 };
 
@@ -84,6 +89,7 @@ const addConversationToUser = async ({
         conversations.unshift({ chatId: newChatDocumentId, participants: [participantId] });
 
         await userDocument.update({ conversations });
+        return;
     } catch (error) {
         console.log('ERROR EN addConversationToUser');
         console.log(error);
@@ -116,6 +122,7 @@ const createNewChat = async (participantData: any) => {
     } catch (error) {
         console.log('ERROR EN createNewChat');
         console.log(error);
+        return error;
     }
 };
 
@@ -127,7 +134,7 @@ export const findConversation = async (participant: any) => {
         const currentUserDoc = await getCurrentDocument();
         if (currentUserDoc.data().conversations?.length) {
             currentUserDoc.data().conversations.forEach((conversation: ConversationProps) => {
-                const conversationExist = conversation.participants.some((participant: string) => participant === participantId);
+                const conversationExist = conversation.participants.some((participId: string) => participId === participantId);
                 if (conversationExist) {
                     chatIdFounded = conversation.chatId;
                 }
@@ -140,10 +147,11 @@ export const findConversation = async (participant: any) => {
     } catch (error) {
         console.log('ERROR EN findConversation');
         console.log(error);
+        return error;
     }
 };
 
-export const addMessage = async (newMessage: any, chatId: string) => {
+export const addMessage = async (newMessage: any, chatId: string): Promise<void> => {
     try {
         const chatDocument = await db.collection('chats').doc(chatId);
         const chatData = await chatDocument.get();
